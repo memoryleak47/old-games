@@ -1,0 +1,38 @@
+#!/bin/bash
+
+DIR="."
+cn=
+fn=
+bc=
+path=
+
+echo "Enter base-class."
+read bc
+
+case $bc in
+	Skill) path="$DIR/skill" ;;
+	Weapon) path="$DIR/weapon" ;;
+		Sword) path="$DIR/weapon/sword/sub" ;;
+		Bow) path="$DIR/weapon/bow/sub" ;;
+	Armor) path="$DIR/armor" ;;
+	*) echo "wrong base-class-name \"$bc\"."; exit ;;
+esac
+
+echo "Enter class-name."
+read cn
+
+
+fn=`echo $cn | awk '{print tolower($0)}'`
+if [ ! -d $path/$fn ]; then
+	echo "Directory \"$fn\" not found."
+	exit
+fi
+
+if [ a$fn == a".template" ]; then
+	echo "You cannot remove the \".template\" folder."
+	exit
+fi
+
+rm -r $path/$fn
+sed -i "/$fn\/$cn/d" $DIR/.i
+sed -i "/$cn/d" $DIR/.fd

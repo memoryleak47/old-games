@@ -1,0 +1,43 @@
+#!/bin/bash
+
+DIR="."
+INC="$DIR/Include.hpp"
+FD="$DIR/ForwardDeclaration.hpp"
+cn=
+fn=
+gb=
+bc=
+path=
+
+echo "Enter base-class."
+read bc
+
+case $bc in
+	Skill) path="$DIR/skill" ;;
+	Weapon) path="$DIR/weapon" ;;
+		Sword) path="$DIR/weapon/sword/sub" ;;
+		Bow) path="$DIR/weapon/bow/sub" ;;
+	Armor) path="$DIR/armor" ;;
+	*) echo "wrong base-class-name \"$bc\"."; exit ;;
+esac
+
+if [ ! -d $path/.template ]; then
+	echo "No \".template\"-directory."
+	exit
+fi
+
+echo "Enter class-name."
+read cn
+
+fn=`echo $cn | awk '{print tolower($0)}'`
+gb=`echo $cn | awk '{print toupper($0)}'`
+mkdir $path/$fn
+cp -r $path/.template/* $path/$fn
+sed -i "s/Template/$cn/g" $path/$fn/Template.*
+sed -i "s/TEMPLATE/$gb/g" $path/$fn/Template.*
+mv $path/$fn/Template.hpp $path/$fn/$cn.hpp
+if [ -f $path/$fn/Template.cpp ]; then
+	mv $path/$fn/Template.cpp $path/$fn/$cn.cpp
+fi
+echo "class $cn;" >> $DIR/.fd
+echo "#include \"${path##\/home\/*\/alnaria\/}/$fn/$cn.hpp\"" >> $DIR/.i

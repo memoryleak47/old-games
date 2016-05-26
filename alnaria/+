@@ -1,0 +1,10 @@
+Level::render() x confused with y...
+
+Skill::damageCircle() / Box().
+
+
+gdb exe core
+bt
+
+
+gdb --tui exe
